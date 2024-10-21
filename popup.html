@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMark</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header (common to both pages) -->
+        <div class="header">
+            <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+            </svg>
+            <h1 class="header-title">SmartMark</h1>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <h2 class="subheader">Welcome to SmartMark</h2>
+            <p class="description">Enter your API key to continue</p>
+            <input type="password" id="apiKeyInput" class="input" placeholder="Enter your API key">
+            <button id="signInBtn" class="btn btn-primary">Sign In</button>
+            <div class="link-container">
+                <a href="https://platform.openai.com/account/api-keys" target="_blank" class="link">Get API key</a>
+            </div>
+        </div>
+
+        <!-- Main Page -->
+        <div id="mainPage" class="page">
+            <div class="current-page">
+                <div class="label">Current Page:</div>
+                <div id="currentUrl" class="url"></div>
+            </div>
+            <button id="addBookmark" class="btn btn-primary">
+                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+                Smart Bookmark
+            </button>
+            <button id="signOutBtn" class="btn btn-secondary">Sign Out</button>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+
+        <!-- Status message (common to both pages) -->
+        <div id="status" class="status hidden"></div>
+    </div>
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

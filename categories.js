@@ -15,7 +15,6 @@ export const predefinedCategories = [
     "Personal Development",
     "Productivity & Tools",
     "Reference",
-    "Other",
     "Artificial Intelligence",
     "Cryptocurrency & Blockchain",
     "Sustainability & Environment",
@@ -33,4 +32,14 @@ export const predefinedCategories = [
     "Plant-based Lifestyle",
     "Space Exploration",
     "Renewable Energy",
+    "Programming",
+    "Web Development",
+    "Mobile Development",
+    "Data Science",
+    "Machine Learning",
+    "Movies & TV",
+    "Components",
+    "Design",
+    "Tools",
+    "Other"
 ];

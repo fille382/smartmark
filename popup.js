@@ -69,32 +69,68 @@ signOutBtn.addEventListener('click'	, () => {
     });
 });
 
-// Add Bookmark (update this function to handle API errors)
+// Add Bookmark (updated to handle API errors and duplicate bookmarks)
 addBookmark.addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const tab = tabs[0];
         showStatus('Processing...', 'info');
+        
         chrome.runtime.sendMessage({
             type: 'ANALYZE_PAGE',
             url: tab.url,
             title: tab.title
         }, function(response) {
             if (response.success) {
-                showStatus('Bookmark added successfully!', 'success');
+                // Show success message with the path
+                const successMessage = `
+                    <div class="toast-title">✓ Bookmark Added!</div>
+                    <div class="toast-path">Location: ${response.path}</div>
+                `;
+                showToast(successMessage, 'success', 5000);
             } else {
                 if (response.error === 'API_ERROR') {
-                    // If there's an API error, invalidate the key and show login
                     chrome.storage.local.remove('isValidated', function() {
                         showPage(loginPage);
-                        showStatus('API key seems invalid. Please sign in again.', 'error');
+                        showToast('API key seems invalid. Please sign in again.', 'error');
                     });
+                } else if (response.error === 'DUPLICATE_BOOKMARK') {
+                    const duplicateMessage = `
+                        <div class="toast-title">ℹ Already Bookmarked</div>
+                        <div class="toast-path">Found in: ${response.existingCategory}</div>
+                    `;
+                    showToast(duplicateMessage, 'info', 5000);
                 } else {
-                    showStatus('Error: ' + response.error, 'error');
+                    showToast('Error: ' + response.error, 'error');
                 }
             }
         });
     });
 });
+
+// Add this helper function to create toast notifications
+function showToast(message, type, duration = 3000) {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    // Create the content of the toast
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+    content.innerHTML = message;
+    
+    toast.appendChild(content);
+    
+    // Add the toast to the page
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Remove the toast after duration
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
 
 async function validateApiKey(apiKey) {
     try {

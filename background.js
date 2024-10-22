@@ -18,10 +18,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function handleAnalyzePageRequest(message, apiKey, sendResponse) {
     try {
         const category = await analyzeAndCategorize(message.url, message.title, apiKey);
-        await createBookmark(message.url, message.title, category);
-        sendResponse({ success: true, category: category });
+        const result = await createBookmark(message.url, message.title, category);
+        sendResponse({ 
+            success: true, 
+            category: result.category,
+            path: result.path
+        });
     } catch (error) {
         console.error('Error:', error);
-        sendResponse({ success: false, error: error.message });
+        
+        // Check if this is a duplicate bookmark error
+        if (error.message.startsWith('DUPLICATE_BOOKMARK:')) {
+            const existingCategory = error.message.split(':')[1];
+            sendResponse({ 
+                success: false, 
+                error: 'DUPLICATE_BOOKMARK',
+                existingCategory: existingCategory 
+            });
+        } else {
+            sendResponse({ success: false, error: error.message });
+        }
     }
 }
